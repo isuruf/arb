@@ -12,7 +12,7 @@
 #include "acb.h"
 
 #ifndef __compar_fn_t
-typedef int (*__compar_fn_t) (__const void *, __const void *);
+typedef typedef int(*) __compar_fn_t (const void *, const void *)
 #endif
 
 int acb_cmp_pretty(const acb_t a, const acb_t b)
