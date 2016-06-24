@@ -43,14 +43,28 @@ foreach (LIB ${DEPS})
     elseif ("${LIB}" STREQUAL "pthreads")
         set (LIB_NAMES ${LIB_NAMES} pthread)
     endif ()
-
-    find_library(${LIB}_LIBRARY NAMES ${LIB_NAMES} HINTS ../${LIB}/${PLATFORM}/${CMAKE_BUILD_TYPE})
-    if (NOT ${LIB}_LIBRARY)
+    string (TOUPPER ${LIB} LIB_UPPER)
+    find_library(${LIB_UPPER}_LIBRARY NAMES ${LIB_NAMES} HINTS ../${LIB}/${PLATFORM}/${CMAKE_BUILD_TYPE})
+    if (NOT ${LIB_UPPER}_LIBRARY)
         message(FATAL_ERROR "${LIB} library not found.")
     endif()
     add_library(${LIB} UNKNOWN IMPORTED)
-    set_property(TARGET ${LIB} PROPERTY IMPORTED_LOCATION ${${LIB}_LIBRARY})
+    set_property(TARGET ${LIB} PROPERTY IMPORTED_LOCATION ${${LIB_UPPER}_LIBRARY})
+    message("${LIB} found in ${${LIB_UPPER}_LIBRARY}")
 
+endforeach ()
+
+set (DEP_HEADERS gmp.h mpfr.h pthread.h flint/flint.h)
+
+foreach (HEADER ${DEP_HEADERS})
+    get_filename_component(LIB ${HEADER} NAME_WE)
+    string(TOUPPER ${LIB} HEADER_PKG)
+    find_path(${HEADER_PKG}_INCLUDE_DIR NAMES ${HEADER} HINTS ../${LIB}/${PLATFORM}/${CMAKE_BUILD_TYPE})
+    if (NOT ${HEADER_PKG}_INCLUDE_DIR)
+        message(FATAL_ERROR "${HEADER} header not found.")
+    endif()
+    message("${HEADER} found in ${${HEADER_PKG}_INCLUDE_DIR}")
+    set (DEP_INCLUDE_DIRS ${DEP_INCLUDE_DIRS} ${${HEADER_PKG}_INCLUDE_DIR})
 endforeach ()
 
 set (FOLDERS
@@ -81,6 +95,7 @@ foreach (FOLDER ${FOLDERS})
 endforeach ()
 
 include_directories(BEFORE ${arb_SOURCE_DIR})
+include_directories(BEFORE ${DEP_INCLUDE_DIRS})
 
 add_library(arb ${SRC})
 

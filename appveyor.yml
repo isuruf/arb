@@ -1,0 +1,34 @@
+version: '{build}'
+
+# Uncomment this to enable the fast build environment if your account does not
+# support it automatically:
+#os: Visual Studio 2015 RC
+
+environment:
+  global:
+    PLATFORMTOOLSET: "v140"
+
+  matrix:
+    - BUILD_TYPE: Release
+      COMPILER: MSVC15
+      PLATFORM: x64
+      LIB_TYPE: dll
+
+
+install:
+- set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
+- conda config --add channels conda-forge
+- conda config --add channels isuruf
+- conda create --quiet --yes -n py35 python=3.5 flint
+- activate py35
+
+- set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+
+build_script:
+- mkdir build
+- cd build
+- cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=C:\Miniconda3\ ..
+- cmake --build .  --config Release --target install
+
+test_script:
+- ctest -V
