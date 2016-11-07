@@ -6,7 +6,7 @@ addons:
       - texinfo
 
 os:
-  # - osx
+  - osx
   - linux
 
 compiler:
@@ -15,6 +15,7 @@ compiler:
 
 script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
+        brew install gcc48;
         export CC=gcc-4.8;
         export CXX=g++-4.8;
     fi
@@ -22,7 +23,8 @@ script:
         export ARB_TEST_MULTIPLIER=0.1;
     fi
   - ./.build_dependencies
-  - ./configure --with-mpir=$HOME/deps --with-mpfr=$HOME/deps --with-flint=$HOME/deps
+  - ./configure --with-mpir=$HOME/deps --with-mpfr=$HOME/deps --with-flint=$HOME/deps --prefix=$HOME/deps
   - make -j4
+  - make install
   - make check
 
