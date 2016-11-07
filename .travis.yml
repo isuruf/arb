@@ -21,10 +21,22 @@ script:
         export CC=gcc-4.8;
         export CXX=g++-4.8;
     fi
+
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    else
+        wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda config --add channels conda-forge --force
+  - conda create -q -y -p $HOME/deps libflint=2.5.2
+  - source activate $HOME/deps
+
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         export ARB_TEST_MULTIPLIER=0.1;
     fi
-  - ./.build_dependencies
+  #- ./.build_dependencies
   - ./configure --with-mpir=$HOME/deps --with-mpfr=$HOME/deps --with-flint=$HOME/deps
   - make -j4
   - make check
