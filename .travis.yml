@@ -13,6 +13,8 @@ compiler:
   - gcc
   - clang
 
+osx_image: xcode6.4
+
 script:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
         brew install gcc48;
