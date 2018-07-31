@@ -8,6 +8,7 @@ addons:
 os:
   - osx
   - linux
+  - linux-ppc64le
 
 osx_image: xcode7
 
