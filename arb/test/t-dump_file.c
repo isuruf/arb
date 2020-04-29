@@ -38,11 +38,17 @@ int main()
             flint_abort();
         }
         arb_dump_file(tmp, x);
-        fflush(tmp);
+        flint_printf("dump_file....");
+        fflush(stdout);        fflush(tmp);
         rewind(tmp);
+        flint_printf("rewind....");
+        fflush(stdout);        fflush(tmp);
         arb_load_file(x, tmp);
+        flint_printf("load_file....");
+        fflush(stdout);        fflush(tmp);
         fclose(tmp);
-
+        flint_printf("fclose....");
+        fflush(stdout);        fflush(tmp);
         arb_clear(x);
     }
 

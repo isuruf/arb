@@ -64,7 +64,7 @@ build_script:
 
 test_script:
   - set "ARB_TEST_MULTIPLIER=0.1"
-  - ctest -j3 --output-on-failure --timeout 600
+  - ctest -j3 -R "dump_file" --verbose --timeout 600
 
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
